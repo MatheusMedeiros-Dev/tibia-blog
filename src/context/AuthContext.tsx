@@ -1,49 +1,43 @@
-import { auth } from "../firebase/config";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from '../firebase/config'
+import { onAuthStateChanged, User } from 'firebase/auth'
 import {
   createContext,
   useContext,
   ReactNode,
   useState,
   useEffect,
-} from "react";
-import { useAuthentication } from "../hooks/useAuthentication";
+} from 'react'
+import { useAuthentication } from '../hooks/useAuthentication'
 
 type AuthContextType = {
-  user: User | null;
-  error: string | null;
-  loading: boolean | undefined;
-  logout: () => Promise<void>;
-};
+  user: User | null
+  logout: () => Promise<void>
+}
 type AuthProviderProps = {
-  children: ReactNode;
-  value: AuthContextType;
-};
+  children: ReactNode
+}
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  error: null,
-  loading: false,
   logout: () => Promise.resolve(),
-});
+})
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const { logout, error, loading } = useAuthentication();
+  const [user, setUser] = useState<User | null>(null)
+  const { logout } = useAuthentication()
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-  }, [auth]);
+    const unsubscribe = onAuthStateChanged(auth, setUser)
+    return () => unsubscribe()
+  }, [])
 
   return (
-    <AuthContext.Provider value={{ user, logout, error, loading }}>
+    <AuthContext.Provider value={{ user, logout }}>
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
 export function useAuthValue() {
-  return useContext(AuthContext);
+  return useContext(AuthContext)
 }

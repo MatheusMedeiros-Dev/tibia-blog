@@ -1,107 +1,106 @@
-import { auth } from "../firebase/config";
+import { auth } from '../firebase/config'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-} from "firebase/auth";
-import { useEffect, useState } from "react";
+} from 'firebase/auth'
+import { useEffect, useRef, useState } from 'react'
 
 export const useAuthentication = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>();
+  const [authError, setAuthError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const isMounted = useRef(true)
 
-  //cleanup
-  const [cancelled, setCancelled] = useState<boolean>(false);
+  useEffect(() => {
+    isMounted.current = true
 
-  // Create account
+    return () => {
+      isMounted.current = false
+    }
+  }, [])
+
   const createUser = async (data: {
-    email: string;
-    password: string;
-    displayName: string;
+    email: string
+    password: string
+    displayName: string
   }) => {
-    setError(null);
-
-    setLoading(true);
+    setAuthError(null)
+    setLoading(true)
 
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
-      );
-
-      await updateProfile(user, { displayName: data.displayName });
-      setLoading(false);
-      return user;
+      )
+      await updateProfile(user, { displayName: data.displayName })
     } catch (error: any) {
-      console.log(error.message);
-      console.log(typeof error.message);
+      if (isMounted.current) {
+        let systemErrorMessage
 
-      let systemErrorMessage;
-
-      if (error.message.includes("Password")) {
-        systemErrorMessage = "A senha deve conter pelo menos 6 caracteres.";
-      } else if (error.message.includes("email-already")) {
-        systemErrorMessage = "E-mail já cadastrado.";
-      } else {
-        systemErrorMessage = "Ocorreu um error, tente novamente mais tarde.";
+        if (error.code === 'auth/weak-password') {
+          systemErrorMessage = 'A senha deve conter pelo menos 6 caracteres.'
+        } else if (error.code === 'auth/email-already-in-use') {
+          systemErrorMessage = 'E-mail já cadastrado.'
+        } else {
+          systemErrorMessage =
+            'Ocorreu um erro ao criar o cadastro. Tente novamente mais tarde.'
+        }
+        setAuthError(systemErrorMessage)
       }
-      setError(systemErrorMessage);
     } finally {
-      if (!cancelled) {
-        setLoading(false);
-      }
+      setLoading(false)
     }
-  };
+  }
 
-  // logout
   const logout = async () => {
-    if (cancelled === false) {
-      console.log("x");
-      return;
-    }
-
+    setAuthError(null)
+    setLoading(true)
     try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-    }
-  };
-
-  // login
-  const login = async (data: { email: string; password: string }) => {
-    if (cancelled === false) {
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      setLoading(false);
-    } catch (error: any) {
-      console.log("Erro completo do Firebase:", error);
-      let systemErrorMessage;
-
-      if (error.code === "auth/invalid-credential") {
-        systemErrorMessage = "Usuário ou senha incorreta.";
-      } else if (data.email === "") {
-        systemErrorMessage = "Digite seu email.";
-      } else if (data.password === "") {
-        systemErrorMessage = "Digite sua senha.";
-      } else {
-        systemErrorMessage = "Ocorreu um erro, tente novamente mais tarde.";
+      await signOut(auth)
+    } catch {
+      if (isMounted.current) {
+        setAuthError(
+          'Ocorreu um erro ao encerrar a sessão. Tente novamente mais tarde.'
+        )
       }
-      setError(systemErrorMessage);
-      setLoading(false);
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
-  useEffect(() => {
-    return () => setCancelled(true);
-  }, []);
+  const login = async (data: { email: string; password: string }) => {
+    if (!data.email) {
+      setAuthError('Digite seu email.')
+      return null
+    }
+    if (!data.password) {
+      setAuthError('Digite sua senha.')
+      return null
+    }
+    setLoading(true)
+    setAuthError(null)
 
-  return { createUser, error, loading, logout, login };
-};
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password)
+    } catch (error: any) {
+      if (isMounted.current) {
+        let systemErrorMessage
+
+        if (error.code === 'auth/invalid-credential') {
+          systemErrorMessage = 'E-mail ou senha incorreta.'
+        } else {
+          systemErrorMessage =
+            'Ocorreu um erro ao efetuar o login. Tente novamente mais tarde.'
+        }
+
+        setAuthError(systemErrorMessage)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return { createUser, authError, loading, logout, login }
+}
