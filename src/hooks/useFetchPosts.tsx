@@ -7,12 +7,13 @@ import {
   orderBy,
   onSnapshot,
   where,
+  Timestamp,
 } from 'firebase/firestore'
 
 type PostData = {
   postId: string
   createdBy?: string
-  createdAt?: any
+  createdAt?: Timestamp
   title?: string
   imageUrl?: string
   body?: string

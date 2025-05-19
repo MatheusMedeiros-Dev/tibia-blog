@@ -52,12 +52,14 @@ const PostsDashboard = () => {
                   >
                     {post.title}
                   </h1>
-                  <p className='flex text-create-at-dashboard text-sm items-center'>
-                    Publicado em:{' '}
-                    {new Date(
-                      post.createdAt.seconds * 1000
-                    ).toLocaleDateString()}
-                  </p>
+                  {post.createdAt && (
+                    <p className='flex text-create-at-dashboard text-sm items-center'>
+                      Publicado em:{' '}
+                      {new Date(
+                        post.createdAt.seconds * 1000
+                      ).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
 
                 <LineDivider />

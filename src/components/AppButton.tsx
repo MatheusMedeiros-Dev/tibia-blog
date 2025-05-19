@@ -89,7 +89,6 @@ const AppButton = ({
 
   if (type === 'submit') {
     if (typeof label !== 'string') {
-      // console.error("Label precisa ser uma string para type='submit'");
       return null
     }
 
@@ -116,7 +115,6 @@ const AppButton = ({
 
   if (type === 'link') {
     if (!to) {
-      // console.error("A prop 'to' é obrigatória quando type for 'link'");
       return null
     }
     return (
@@ -128,7 +126,6 @@ const AppButton = ({
 
   if (type === 'navlink') {
     if (!to) {
-      // console.error("A prop 'to' é obrigatória quando type for 'navlink'");
       return null
     }
     return (

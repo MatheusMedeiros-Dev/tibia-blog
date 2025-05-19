@@ -10,7 +10,7 @@ interface ModalProps {
   onClickConfirm: () => void
 }
 
-const modalRoot = document.getElementById('modal-root')! // ① :contentReference[oaicite:0]{index=0}
+const modalRoot = document.getElementById('modal-root')!
 
 export default function Modal({
   isOpen,
@@ -19,7 +19,6 @@ export default function Modal({
   onClickClose,
   onClickConfirm,
 }: ModalProps) {
-  // fecha no Esc
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()

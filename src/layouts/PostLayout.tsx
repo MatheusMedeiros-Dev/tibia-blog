@@ -3,12 +3,12 @@ import LineDivider from '../components/LineDivider'
 
 type PostLayoutProps = {
   postId: string
-  createdBy: string
-  createdAt: Timestamp
-  title: string
-  imageUrl: string
-  body: string
-  tagsArray: string[]
+  createdBy?: string
+  createdAt?: Timestamp
+  title?: string
+  imageUrl?: string
+  body?: string
+  tagsArray?: string[]
 }
 
 const PostLayout = ({
@@ -30,11 +30,12 @@ const PostLayout = ({
           >
             {createdBy}
           </p>
-
-          <p className='flex text-create-at items-center'>
-            Publicado em:{' '}
-            {new Date(createdAt.seconds * 1000).toLocaleDateString()}
-          </p>
+          {createdAt && (
+            <p className='flex text-create-at items-center'>
+              Publicado em:{' '}
+              {new Date(createdAt.seconds * 1000).toLocaleDateString()}
+            </p>
+          )}
         </div>
 
         <LineDivider direction='horizontal' />
