@@ -20,10 +20,10 @@ const SearchResults = () => {
 
   return (
     <>
-      <BackButtonBar widthClass='w-[700px]' to='/' />
+      <BackButtonBar to='/' />
       {posts && posts.length === 0 ? (
         <div className='flex justify-center'>
-          <div className='flex-col w-[700px] bg-overlay-bg rounded-lg'>
+          <div className='flex-col w-full sm:w-2/3 bg-overlay-bg rounded-lg'>
             <div className='bg-content-bg m-2 rounded-sm'>
               <p className='justify-center text-secondary-text font-semibold p-2'>
                 Desculpe, não encontramos nenhum post relacionado a essa

@@ -6,7 +6,6 @@ import InputField from '../components/InputField'
 import BackButtonBar from '../components/BackButtonBar'
 import AppButton from '../components/AppButton'
 import FormLayout from '../layouts/FormLayout'
-import LoadingScreen from './LoadingScreen'
 import ErrorPage from './ErrorPage'
 import Modal from '../components/Modal'
 
@@ -19,18 +18,6 @@ type EditedPost = {
 
 const EditPost = () => {
   const { postId } = useParams()
-
-  if (!postId) {
-    return <ErrorPage errorMessage='Post não encontrado' />
-  }
-
-  const { post, loading, error } = useFetchPost('posts', postId)
-  if (error) {
-    return <ErrorPage errorMessage={error} />
-  }
-  if (loading) {
-    return <LoadingScreen />
-  }
   const navigate = useNavigate()
   const [title, setTitle] = useState<string>('')
   const [imageUrl, setImageUrl] = useState<string>('')
@@ -42,16 +29,14 @@ const EditPost = () => {
     loading: loadingFromUpdate,
     error: errorFromUpdate,
   } = useUpdatePost('posts')
+  if (!postId) {
+    return <ErrorPage errorMessage='Post não encontrado' />
+  }
+  const { post, error } = useFetchPost('posts', postId)
 
-  useEffect(() => {
-    if (post) {
-      setTitle(post.title || '')
-      setBody(post.body || '')
-      setImageUrl(post.imageUrl || '')
-      const textTags = post.tagsArray ? post.tagsArray.join(', ') : ''
-      setTags(textTags || '')
-    }
-  }, [post])
+  if (error) {
+    return <ErrorPage errorMessage={error} />
+  }
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pendingEvent, setPendingEvent] = useState<FormEvent>()
@@ -62,11 +47,11 @@ const EditPost = () => {
     setIsModalOpen(true)
   }
 
-  const handleCancel = () => {
+  const handleModalCancel = () => {
     setIsModalOpen(false)
     setPendingEvent(undefined)
   }
-  const handleConfirm = () => {
+  const handleModalConfirm = () => {
     if (pendingEvent) handleSubmit(pendingEvent)
     setIsModalOpen(false)
   }
@@ -90,61 +75,71 @@ const EditPost = () => {
 
     const editedPost: EditedPost = { title, imageUrl, body, tagsArray }
 
-    await updatePost(postId, editedPost)
+    await updatePost(postId!, editedPost)
     navigate('/dashboard/posts')
   }
+  useEffect(() => {
+    if (post) {
+      setTitle(post.title || '')
+      setBody(post.body || '')
+      setImageUrl(post.imageUrl || '')
+      const textTags = post.tagsArray ? post.tagsArray.join(', ') : ''
+      setTags(textTags || '')
+    }
+  }, [post])
 
   return (
     <>
       {post && (
         <>
-          <BackButtonBar widthClass='w-[400px]' to='/dashboard/posts' />
+          <BackButtonBar to='/dashboard/posts' width='w-1/3' />
           <FormLayout
             mode='withBar'
             title='Editar post'
             onSubmit={handleRequestSubmit}
           >
-            <InputField
-              label='Título:'
-              name='title'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder='Título'
-              required
-            />
+            <div className=''>
+              <InputField
+                label='Título:'
+                name='title'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder='Título'
+                required
+              />
 
-            <InputField
-              label='Url da imagem:'
-              name='imageUrl'
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder='Coloque a URL da imagem'
-              required
-            />
+              <InputField
+                label='Url da imagem:'
+                name='imageUrl'
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder='Coloque a URL da imagem'
+                required
+              />
 
-            <div className='w-[100px]'>
-              <p className='font-semibold text-primary-text'>Preview:</p>
-              <img src={imageUrl || undefined} alt='Preview' />
+              <div className='w-[100px]'>
+                <p className='font-semibold text-primary-text'>Preview:</p>
+                <img src={imageUrl || undefined} alt='Preview' />
+              </div>
+
+              <InputField
+                label='Conteúdo:'
+                name='body'
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder='Conteúdo do post'
+                required
+              />
+
+              <InputField
+                label='Tags:'
+                name='tags'
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder='Insira as tags'
+                required
+              />
             </div>
-
-            <InputField
-              label='Conteúdo:'
-              name='body'
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder='Conteúdo do post'
-              required
-            />
-
-            <InputField
-              label='Tags:'
-              name='tags'
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              placeholder='Insira as tags'
-              required
-            />
-
             <AppButton
               label={loadingFromUpdate ? 'Editando...' : 'Editar'}
               type='submit'
@@ -153,11 +148,11 @@ const EditPost = () => {
             />
 
             <Modal
-              isOpen={isModalOpen}
-              onClose={handleCancel}
-              textToModel='Tem certeza que deseja salvar as alterações?'
-              onClickClose={handleCancel}
-              onClickConfirm={handleConfirm}
+              modalIsOpen={isModalOpen}
+              modalOnClose={handleModalCancel}
+              modalText='Tem certeza que deseja salvar as alterações?'
+              modalOnClickClose={handleModalCancel}
+              modalOnClickConfirm={handleModalConfirm}
             />
           </FormLayout>
         </>

@@ -21,8 +21,8 @@ const PostLayout = ({
   tagsArray,
 }: PostLayoutProps) => {
   return (
-    <div className='flex justify-center mb-2'>
-      <div className='flex flex-col flex-wrap w-[700px]  bg-overlay-bg rounded-lg'>
+    <div className='flex justify-center'>
+      <div className='flex flex-col w-full sm:w-2/3 mb-2 bg-overlay-bg rounded-lg'>
         <div className='flex justify-between m-1.5 ml-1.5 items-center'>
           <p
             className='flex font-bold text-xl text-username'

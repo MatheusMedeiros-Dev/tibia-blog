@@ -13,10 +13,10 @@ type SearchBarProps = {
 
 const SearchBar = ({ onSubmit, inputValue, onChange }: SearchBarProps) => {
   return (
-    <>
+    <div className='flex mb-2 w-full sm:w-2/3 justify-center items-center bg-overlay-bg rounded-b-lg'>
       <form onSubmit={onSubmit} className='flex justify-center'>
-        <div className='flex w-[700px] mb-2 bg-overlay-bg rounded-b-lg'>
-          <div className='inline-flex items-center h-[26px] m-3 mr-1'>
+        <div className='flex items-center h-[26px] m-3 mr-1'>
+          <div className='flex'>
             <InputField
               inputType='search'
               name='query'
@@ -25,12 +25,12 @@ const SearchBar = ({ onSubmit, inputValue, onChange }: SearchBarProps) => {
               onChange={onChange}
             />
           </div>
-          <div className='flex items-center'>
+          <div className='flex'>
             <AppButton type='button' icon={<FaSearch />} buttonType='search' />
           </div>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

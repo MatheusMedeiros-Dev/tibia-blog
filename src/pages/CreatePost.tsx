@@ -45,35 +45,37 @@ const CreatePost = () => {
 
   return (
     <FormLayout title='Crie seu post' onSubmit={handleSubmit}>
-      <InputField
-        label='Título:'
-        name='title'
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder='Digite o título do post'
-      />
-      <InputField
-        label='Url da imagem:'
-        name='imageUrl'
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
-        placeholder='Cole a URL da imagem'
-      />
-      <InputField
-        label='Conteúdo:'
-        type='textarea'
-        name='body'
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        placeholder='Escreva algo sobre o post'
-      />
-      <InputField
-        label='Tags:'
-        name='tags'
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
-        placeholder='Separe as tags com vírgula'
-      />
+      <div className=''>
+        <InputField
+          label='Título:'
+          name='title'
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder='Digite o título do post'
+        />
+        <InputField
+          label='Url da imagem:'
+          name='imageUrl'
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder='Cole a URL da imagem'
+        />
+        <InputField
+          label='Conteúdo:'
+          type='textarea'
+          name='body'
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          placeholder='Escreva algo sobre o post'
+        />
+        <InputField
+          label='Tags:'
+          name='tags'
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder='Separe as tags com vírgula'
+        />
+      </div>
 
       <AppButton
         label={loading ? 'Postando...' : 'Postar'}

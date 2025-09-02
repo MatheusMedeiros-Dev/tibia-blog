@@ -34,8 +34,10 @@ export const useAuthentication = () => {
         data.email,
         data.password
       )
+      console.log(user)
       await updateProfile(user, { displayName: data.displayName })
     } catch (error: any) {
+      console.log(error)
       if (isMounted.current) {
         let systemErrorMessage
 

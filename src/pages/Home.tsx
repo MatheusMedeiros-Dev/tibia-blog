@@ -33,7 +33,7 @@ const Home = () => {
   if (posts?.length === 0) {
     return (
       <div className='flex justify-center'>
-        <div className='w-[500px] bg-overlay-bg rounded-b-lg mb-2'>
+        <div className='w-[100%] sm:w-[80%] bg-overlay-bg rounded-b-lg mb-2'>
           <p className='bg-content-bg text-secondary-text py-4 m-2 mb-0 text-center rounded-lg font-medium'>
             Ainda não há postagens. Seja o primeiro a postar!
           </p>
@@ -48,7 +48,7 @@ const Home = () => {
   return (
     <>
       {posts && (
-        <>
+        <div className='flex flex-col justify-center items-center'>
           <SearchBar
             onSubmit={handleSubmit}
             onChange={(e) => setQuery(e.target.value)}
@@ -66,7 +66,7 @@ const Home = () => {
               tagsArray={post.tagsArray}
             />
           ))}
-        </>
+        </div>
       )}
     </>
   )

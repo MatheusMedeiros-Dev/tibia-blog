@@ -10,7 +10,7 @@ const FormLayout = ({
   onSubmit,
   children,
 }: FormLayoutProps) => {
-  const baseClasses = `w-[400px] bg-overlay-bg shadow-lg text-primary-text mb-2`
+  const baseClasses = `w-full sm:w-1/3 bg-overlay-bg shadow-lg text-primary-text mb-2`
   const finalClass =
     mode === 'default'
       ? `${baseClasses} rounded-b-xl`

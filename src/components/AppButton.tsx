@@ -44,7 +44,7 @@ const AppButton = ({
   }
 
   const baseTypeClasses =
-    'text-primary-text rounded-lg mt-1.5 mb-2.5 p-1.5 px-3 font-bold'
+    'text-primary-text rounded-lg mt-1.5 mb-2.5 p-1.5 sm:p-2 sm:px-4 px-3 font-bold'
 
   const buttonTypeClasses: Record<string, string> = {
     default: `${baseTypeClasses} bg-btn-bg hover:bg-btn-hover transition duration-200`,
@@ -53,10 +53,10 @@ const AppButton = ({
     delete: `${baseTypeClasses} bg-btn-danger hover:bg-btn-danger-hover cursor-pointer`,
     submit: `${baseTypeClasses} bg-btn-bg hover:bg-btn-hover transition duration-200`,
     search:
-      'flex items-center justify-center h-[26px] w-[34px] text-primary-text bg-btn-search-bg hover:bg-search-hover-bg transition duration-300 rounded-md cursor-pointer',
-    login: 'flex rounded-sm text-inherit ml-2 font-medium',
+      'flex items-center justify-center h-[26px] w-[34px] sm:h-[30px]  sm:w-[38px] text-primary-text bg-btn-search-bg hover:bg-search-hover-bg transition duration-300 rounded-md cursor-pointer',
+    login: 'flex rounded-sm text-inherit font-medium',
     logout:
-      'flex text-inherit cursor-pointer hover:bg-btn-danger rounded-sm px-4 m-0 transition duration-300 font-medium',
+      'flex cursor-pointer hover:bg-btn-danger rounded-sm px-2 transition duration-300 font-medium',
     navbar: 'flex rounded-sm text-inherit ml-2 font-medium',
     backbar:
       'inline-flex text-primary-text rounded-lg m-2 p-1.5 px-3 font-bold bg-btn-bg hover:bg-btn-hover transition duration-200',
